@@ -1,6 +1,6 @@
 package com.backend.backend.mapper;
 
-import com.backend.backend.domain.User;
+import com.backend.backend.models.User;
 import com.backend.backend.dto.CreateUserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

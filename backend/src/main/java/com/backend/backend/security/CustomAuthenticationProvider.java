@@ -1,16 +1,14 @@
 package com.backend.backend.security;
 
-import com.backend.backend.domain.User;
+import com.backend.backend.models.User;
 import com.backend.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -27,10 +25,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
            if(!BCrypt.checkpw(plainPassword.trim(), user.getPassword())){
                throw new SecurityException("User can not be authenticated.");
            }
-           /*return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-                                                          authentication.getCredentials(),
-                                                          Arrays.asList(new SimpleGrantedAuthority(user.getRole())));*/
-                    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+
+           return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
                             authentication.getCredentials(),
                             Collections.emptyList());
         })

@@ -1,9 +1,9 @@
 package com.backend.backend.api;
 
-import com.backend.backend.models.Cryptocurrency;
-import com.backend.backend.models.User;
+import com.backend.backend.dto.GetCryptoListResponseDTO;
+import com.backend.backend.dto.GetCurrentUserResponseDTO;
 import com.backend.backend.dto.CreateUserRequestDTO;
-import com.backend.backend.mapper.UserMapper;
+import com.backend.backend.models.Wallet;
 import com.backend.backend.security.CustomAuthenticationProvider;
 import com.backend.backend.security.JwtRequest;
 import com.backend.backend.security.JwtResponse;
@@ -12,36 +12,37 @@ import com.backend.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserDetailsService userDetailsService;
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
-    private final UserMapper userMapper;
 
     @GetMapping("/getCryptoList")
-    public ResponseEntity<List<Cryptocurrency>> getCryptoList(){
+    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoList(){
         return ResponseEntity.ok().body(userService.getCryptoList());
     }
 
-    @GetMapping("/currentUserMoney")
-    public ResponseEntity<Double> currentUserMoney(){
-        return ResponseEntity.ok().body(userService.getUsersMoney());
+    @GetMapping("/getCurrentUser")
+    public ResponseEntity<GetCurrentUserResponseDTO> getCurrentUser(){
+        GetCurrentUserResponseDTO currentUser = userService.getCurrentUser();
+        return ResponseEntity.ok().body(currentUser);
+    }
+
+    @GetMapping("/getWallet")
+    public ResponseEntity<Wallet> getWallet(){
+        Wallet wallet = userService.getWallet();
+        return ResponseEntity.ok().body(wallet);
     }
 
     @PatchMapping("/addMoney")
@@ -51,26 +52,26 @@ public class UserController {
     }
 
     @PatchMapping("/buyCryptocurrency")
-    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name="cryptoName") String cryptoName,
+    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name="cryptoId") UUID cryptoId,
                                                @RequestParam(name="value") Double value){
-        userService.buyCryptocurrency(cryptoName,value);
+        userService.buyCryptocurrency(cryptoId,value);
         return ResponseEntity.ok("success");
     }
 
     @PatchMapping("/sellCryptocurrency")
-    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name="cryptoName") String cryptoName,
+    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name="cryptoId") UUID cryptoId,
                                                 @RequestParam(name="value") Double value){
-        userService.sellCryptocurrency(cryptoName,value);
+        userService.sellCryptocurrency(cryptoId,value);
         return ResponseEntity.ok("success");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody @Valid CreateUserRequestDTO userDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid CreateUserRequestDTO userDTO) {
         return new ResponseEntity<>(userService.create(userDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(),
                                                                                                           jwtRequest.getPassword());
         Authentication authentication = authenticationProvider.authenticate(authenticationToken);

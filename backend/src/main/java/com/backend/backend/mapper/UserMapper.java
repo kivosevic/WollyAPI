@@ -18,7 +18,7 @@ public class UserMapper {
                    .build();
     }
 
-    public GetCurrentUserResponseDTO toGetUserDTOEntity(User user){
+    public GetCurrentUserResponseDTO toGetUserResponseDTOEntity(User user){
         return GetCurrentUserResponseDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

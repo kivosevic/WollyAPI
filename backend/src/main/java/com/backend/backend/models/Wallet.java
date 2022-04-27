@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
-import java.util.UUID;
-
-import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
@@ -20,11 +17,11 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Wallet {
     @Id
-    @GeneratedValue(strategy = AUTO)
-    private UUID id;
-    @OneToMany
+    //@GeneratedValue(strategy = AUTO)
+    private String id;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<WalletItem> cryptocurrencies;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
     private Double totalBalance;
 }

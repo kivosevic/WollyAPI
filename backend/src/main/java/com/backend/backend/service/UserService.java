@@ -53,19 +53,15 @@ public class UserService {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new EntityExistsException("This email is already in use.");
         }
+
         User user = userMapper.toUserEntity(userDTO);
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), salt);
         user.setPassword(hashedPassword);
         user.setCurrentCardBalance(Double.valueOf(50000));
         user.setRole("USER");
-        //user.setId(UUID.randomUUID().toString());
-
-        /*Cryptocurrency cryptocurrency = new Cryptocurrency(UUID.randomUUID(), "Bitcoin", "BTC", "~/images/btc.png", 12345.6);
-        cryptocurrency*/
-
+        
         Wallet wallet = new Wallet();
-        //wallet.setId(UUID.randomUUID());
         userRepository.save(user);
         walletRepository.save(wallet);
 

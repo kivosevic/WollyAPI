@@ -59,9 +59,13 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setCurrentCardBalance(Double.valueOf(50000));
         user.setRole("USER");
-        user.setId(UUID.randomUUID().toString());
+        //user.setId(UUID.randomUUID().toString());
+
+        /*Cryptocurrency cryptocurrency = new Cryptocurrency(UUID.randomUUID(), "Bitcoin", "BTC", "~/images/btc.png", 12345.6);
+        cryptocurrency*/
+
         Wallet wallet = new Wallet();
-        wallet.setId(UUID.randomUUID().toString());
+        //wallet.setId(UUID.randomUUID());
         userRepository.save(user);
         walletRepository.save(wallet);
 
@@ -96,29 +100,29 @@ public class UserService {
 
     public void addMoney(Double value) {
         User user = getLoggedInUser();
-        user.setCurrentCardBalance(Double.valueOf(user.getCurrentCardBalance() + value));
-        userRepository.save(user);
+        Double newBalance = user.getCurrentCardBalance() + value;
+        user.setCurrentCardBalance(newBalance);
     }
 
     public void buyCryptocurrency(UUID cryptoId, Double value) {
         User user = getLoggedInUser();
-        Wallet wallet = user.getWallet();
-//        wallet.setTotalBalance(wallet.getTotalBalance() - value);
-//        wallet.getCryptocurrencies().forEach(crypto -> {
-//            if(crypto.getCryptocurrencyId().equals(cryptoId)){
-//                crypto.setAmount(crypto.getAmount() - value);
-//            }
-//        });
+        Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
+        wallet.setTotalBalance(wallet.getTotalBalance() - value);
+        wallet.getCryptocurrencies().forEach(crypto -> {
+            if(crypto.getCryptocurrencyId().equals(cryptoId)){
+                crypto.setAmount(crypto.getAmount() - value);
+            }
+        });
     }
 
     public void sellCryptocurrency(UUID cryptoId, Double value) {
         User user = getLoggedInUser();
-        Wallet wallet = user.getWallet();
-//        wallet.setTotalBalance(wallet.getTotalBalance() + value);
-//        wallet.getCryptocurrencies().forEach(crypto -> {
-//            if(crypto.getCryptocurrencyId().equals(cryptoId)){
-//                crypto.setAmount(crypto.getAmount() + value);
-//            }
-//        });
+        Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
+        wallet.setTotalBalance(wallet.getTotalBalance() + value);
+        wallet.getCryptocurrencies().forEach(crypto -> {
+            if(crypto.getCryptocurrencyId().equals(cryptoId)){
+                crypto.setAmount(crypto.getAmount() + value);
+            }
+        });
     }
 }

@@ -4,14 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
+
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
@@ -20,17 +26,10 @@ import java.util.List;
 @Builder
 public class User implements Serializable {
     @Id
-/*    @Type(type="uuid-char")
-    @Column(name="id")*/
-/*
+    @Column(name = "uuid", columnDefinition = "char(36)")
+    @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(strategy = AUTO)
-*/
-    /*@GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )*/
-    private String id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String password;

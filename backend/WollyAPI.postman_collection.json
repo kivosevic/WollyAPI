@@ -1,0 +1,446 @@
+{
+	"info": {
+		"_postman_id": "16d57abd-e026-457a-aebf-acdddf040765",
+		"name": "WollyAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "Returns \"Email is already in use\"",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"email\": \"email@email.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Returns created user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"email\": \"email@email.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Returns BadRequest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"email\": \"email1@email.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Returns jwt",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Returns BadRequest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"email1@email.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CryptoList",
+			"item": [
+				{
+					"name": "Returns list of cryptos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUxMTM3MDQ5fQ.QVgLUMArie4GVI-qqcODslhJUkMxgx2dIrJsRgelxE7oWKwimEXDRKD3Zmx-KtAL1XsdOa95uF96TRxjRTSPqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/getCryptoList",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"getCryptoList"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CurrentUser",
+			"item": [
+				{
+					"name": "Returns logged in user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUxMTM3MDQ5fQ.QVgLUMArie4GVI-qqcODslhJUkMxgx2dIrJsRgelxE7oWKwimEXDRKD3Zmx-KtAL1XsdOa95uF96TRxjRTSPqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/getCurrentUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"getCurrentUser"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "Returns user's wallet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUxMTM3MDQ5fQ.QVgLUMArie4GVI-qqcODslhJUkMxgx2dIrJsRgelxE7oWKwimEXDRKD3Zmx-KtAL1XsdOa95uF96TRxjRTSPqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/getWallet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"getWallet"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add money",
+			"item": [
+				{
+					"name": "Returns \"success\"",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUxMTM3MDQ5fQ.QVgLUMArie4GVI-qqcODslhJUkMxgx2dIrJsRgelxE7oWKwimEXDRKD3Zmx-KtAL1XsdOa95uF96TRxjRTSPqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/addMoney?value=50000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"addMoney"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "50000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Buy crypto",
+			"item": [
+				{
+					"name": "Returns \"success\"",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUxMTM3MDQ5fQ.QVgLUMArie4GVI-qqcODslhJUkMxgx2dIrJsRgelxE7oWKwimEXDRKD3Zmx-KtAL1XsdOa95uF96TRxjRTSPqw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/buyCryptocurrency?cryptoId=04767ea7-44e0-4333-879d-e127ee8678f6&value=307",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"buyCryptocurrency"
+							],
+							"query": [
+								{
+									"key": "cryptoId",
+									"value": "04767ea7-44e0-4333-879d-e127ee8678f6"
+								},
+								{
+									"key": "value",
+									"value": "307"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sell crypto",
+			"item": [
+				{
+					"name": "Card balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJcIlwiIjoiIiwiZXhwIjoxNjUwNjM0NjkyfQ.pBLXO6h9vX3BS6rwG2_PMGYv3R4ZZVCLOoaeDUjEZI9rEDdyt2kqRTXKtntc4ZE66CezsVugTXjlD3AhkBdrkg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/sellCryptocurrency?cryptoId=81f97f12-272c-409d-a4af-00620470043b&value=250",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"sellCryptocurrency"
+							],
+							"query": [
+								{
+									"key": "cryptoId",
+									"value": "81f97f12-272c-409d-a4af-00620470043b"
+								},
+								{
+									"key": "value",
+									"value": "250"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

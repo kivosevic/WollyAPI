@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +36,8 @@ public class UserController {
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
 
-    @GetMapping("/getCryptoList")
-    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoList(){
+    @RequestMapping(value="/getCryptoList", method= RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController(){
         return ResponseEntity.ok().body(userService.getCryptoList());
     }
 

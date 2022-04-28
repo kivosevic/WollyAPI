@@ -3,6 +3,7 @@ package com.backend.backend.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -24,8 +25,19 @@ public class WalletItem {
     @Column(name = "uuid", columnDefinition = "char(36)")
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
+
+    @Column(name = "cryptocurrencyId", columnDefinition = "char(36)")
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID cryptocurrencyId;
+
     private Double amount;
+    @ToString.Exclude
     @ManyToOne
     Wallet wallet;
+
+    public WalletItem(UUID cryptoId, Double value, Wallet wallet) {
+        this.cryptocurrencyId=cryptoId;
+        this.amount=value;
+        this.wallet = wallet;
+    }
 }

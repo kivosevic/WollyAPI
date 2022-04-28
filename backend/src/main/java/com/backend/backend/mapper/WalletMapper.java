@@ -12,7 +12,7 @@ public class WalletMapper {
     public GetWalletResponseDTO toGetWalletResponseDTOEntity(Wallet wallet){
         return GetWalletResponseDTO.builder()
                 .totalBalance(wallet.getTotalBalance())
-                .cryptocurrencies(wallet.getCryptocurrencies())
+                .cryptocurrencies(wallet.getWalletItems())
                 .build();
     }
 }

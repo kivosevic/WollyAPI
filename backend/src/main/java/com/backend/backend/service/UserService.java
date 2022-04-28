@@ -9,7 +9,10 @@ import com.backend.backend.mapper.UserMapper;
 import com.backend.backend.mapper.WalletMapper;
 import com.backend.backend.models.User;
 import com.backend.backend.models.Wallet;
+import com.backend.backend.models.WalletItem;
+import com.backend.backend.repository.CryptocurrencyRepository;
 import com.backend.backend.repository.UserRepository;
+import com.backend.backend.repository.WalletItemRepository;
 import com.backend.backend.repository.WalletRepository;
 import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +25,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
+    private final WalletItemRepository walletItemRepository;
+    private final CryptocurrencyRepository cryptocurrencyRepository;
     private final UserMapper userMapper;
     private final WalletMapper walletMapper;
     private final CryptocurrencyMapper cryptocurrencyMapper;
@@ -60,16 +66,16 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setCurrentCardBalance(Double.valueOf(50000));
         user.setRole("USER");
-        
-        Wallet wallet = new Wallet();
-        userRepository.save(user);
-        walletRepository.save(wallet);
 
+        Wallet wallet = new Wallet();
+        user = userRepository.save(user);
+        wallet = walletRepository.save(wallet);
         wallet.setUser(user);
         user.setWallet(wallet);
 
-        userRepository.save(user);
+        user = userRepository.save(user);
         walletRepository.save(wallet);
+
         return user;
     }
 
@@ -80,13 +86,12 @@ public class UserService {
 
     public List<GetCryptoListResponseDTO> getCryptoList() {
         User user = getLoggedInUser();
-//        List<GetCryptoListResponseDTO> cryptoList = new ArrayList<GetCryptoListResponseDTO>();
-//        user.getCurrencyList().forEach(currency -> {
-//            cryptoList.add(cryptocurrencyMapper.toGetCryptoListResponseDTOEntity(currency));
-//        });
-//        user.getCurrencyList().stream().map(CryptocurrencyMapper::toGetCryptoListResponseDTOEntity).collect(Collectors.toList());
+        List<GetCryptoListResponseDTO> cryptoList = new ArrayList<>();
+        user.getWallet().getWalletItems().forEach(walletItem -> {
+            cryptoList.add(cryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId())));
+        });
 
-        return user.getCurrencyList().stream().map(CryptocurrencyMapper::toGetCryptoListResponseDTOEntity).collect(Collectors.toList());
+       return cryptoList;
     }
 
     public GetWalletResponseDTO getWallet(){
@@ -101,23 +106,28 @@ public class UserService {
     }
 
     public void buyCryptocurrency(UUID cryptoId, Double value) {
-        User user = getLoggedInUser();
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
-        wallet.setTotalBalance(wallet.getTotalBalance() - value);
-        wallet.getCryptocurrencies().forEach(crypto -> {
-            if(crypto.getCryptocurrencyId().equals(cryptoId)){
-                crypto.setAmount(crypto.getAmount() - value);
+        wallet.setTotalBalance(wallet.getTotalBalance() + value);
+
+        AtomicReference<Boolean> valid = new AtomicReference<>(false);
+        for(WalletItem walletItem : wallet.getWalletItems()){
+            if (walletItem.getCryptocurrencyId().equals(cryptoId)) {
+                walletItem.setAmount(walletItem.getAmount() + value);
+                valid.set(true);
             }
-        });
+        }
+
+        if(!valid.get()){
+            walletItemRepository.save(new WalletItem(cryptoId, value, wallet));
+        }
     }
 
     public void sellCryptocurrency(UUID cryptoId, Double value) {
-        User user = getLoggedInUser();
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
-        wallet.setTotalBalance(wallet.getTotalBalance() + value);
-        wallet.getCryptocurrencies().forEach(crypto -> {
-            if(crypto.getCryptocurrencyId().equals(cryptoId)){
-                crypto.setAmount(crypto.getAmount() + value);
+        wallet.setTotalBalance(wallet.getTotalBalance() - value);
+        wallet.getWalletItems().forEach(walletItem -> {
+            if(walletItem.getCryptocurrencyId().equals(cryptoId)){
+                walletItem.setAmount(walletItem.getAmount() - value);
             }
         });
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,10 +32,11 @@ public class Wallet {
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(strategy = AUTO)
     private UUID id;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<WalletItem> cryptocurrencies;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="wallet")
+    private List<WalletItem> walletItems = new ArrayList<>();
+    @ToString.Exclude
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
-    private Double totalBalance;
+    private Double totalBalance = 0d;
 }
 

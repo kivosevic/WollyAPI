@@ -7,6 +7,7 @@ import com.backend.backend.dto.GetWalletResponseDTO;
 import com.backend.backend.mapper.CryptocurrencyMapper;
 import com.backend.backend.mapper.UserMapper;
 import com.backend.backend.mapper.WalletMapper;
+import com.backend.backend.models.Cryptocurrency;
 import com.backend.backend.models.User;
 import com.backend.backend.models.Wallet;
 import com.backend.backend.models.WalletItem;
@@ -34,15 +35,15 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final WalletItemRepository walletItemRepository;
     private final CryptocurrencyRepository cryptocurrencyRepository;
     private final UserMapper userMapper;
     private final WalletMapper walletMapper;
-    private final CryptocurrencyMapper cryptocurrencyMapper;
 
-    private User getLoggedInUser(){
+    private User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
             throw new EntityNotFoundException("You must log in first");
@@ -64,7 +65,7 @@ public class UserService {
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), salt);
         user.setPassword(hashedPassword);
-        user.setCurrentCardBalance(Double.valueOf(50000));
+        user.setCurrentCardBalance(50000.0);
         user.setRole("USER");
 
         Wallet wallet = new Wallet();
@@ -79,22 +80,22 @@ public class UserService {
         return user;
     }
 
-    public GetCurrentUserResponseDTO getCurrentUser(){
-        GetCurrentUserResponseDTO user = userMapper.toGetUserResponseDTOEntity(getLoggedInUser());
-        return user;
+    public GetCurrentUserResponseDTO getCurrentUser() {
+        return userMapper.toGetUserResponseDTOEntity(getLoggedInUser());
     }
 
     public List<GetCryptoListResponseDTO> getCryptoList() {
         User user = getLoggedInUser();
         List<GetCryptoListResponseDTO> cryptoList = new ArrayList<>();
         user.getWallet().getWalletItems().forEach(walletItem -> {
-            cryptoList.add(cryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId())));
+            Cryptocurrency cryptocurrency = cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId());
+            cryptoList.add(CryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrency));
         });
 
-       return cryptoList;
+        return cryptoList;
     }
 
-    public GetWalletResponseDTO getWallet(){
+    public GetWalletResponseDTO getWallet() {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         return walletMapper.toGetWalletResponseDTOEntity(wallet);
     }
@@ -110,14 +111,14 @@ public class UserService {
         wallet.setTotalBalance(wallet.getTotalBalance() + value);
 
         AtomicReference<Boolean> valid = new AtomicReference<>(false);
-        for(WalletItem walletItem : wallet.getWalletItems()){
+        for (WalletItem walletItem : wallet.getWalletItems()) {
             if (walletItem.getCryptocurrencyId().equals(cryptoId)) {
                 walletItem.setAmount(walletItem.getAmount() + value);
                 valid.set(true);
             }
         }
 
-        if(!valid.get()){
+        if (!valid.get()) {
             walletItemRepository.save(new WalletItem(cryptoId, value, wallet));
         }
     }
@@ -126,7 +127,7 @@ public class UserService {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         wallet.setTotalBalance(wallet.getTotalBalance() - value);
         wallet.getWalletItems().forEach(walletItem -> {
-            if(walletItem.getCryptocurrencyId().equals(cryptoId)){
+            if (walletItem.getCryptocurrencyId().equals(cryptoId)) {
                 walletItem.setAmount(walletItem.getAmount() - value);
             }
         });

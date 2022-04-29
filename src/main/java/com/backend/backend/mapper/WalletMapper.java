@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WalletMapper {
-    public GetWalletResponseDTO toGetWalletResponseDTOEntity(Wallet wallet){
+    public GetWalletResponseDTO toGetWalletResponseDTOEntity(Wallet wallet) {
         return GetWalletResponseDTO.builder()
                 .totalBalance(wallet.getTotalBalance())
                 .cryptocurrencies(wallet.getWalletItems())

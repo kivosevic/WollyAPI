@@ -15,14 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,58 +29,58 @@ public class UserController {
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
 
-    @RequestMapping(value="/getCryptoList", method= RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController(){
+    @GetMapping("/crypto")
+    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController() {
         return ResponseEntity.ok().body(userService.getCryptoList());
     }
 
-    @GetMapping("/getCurrentUser")
-    public ResponseEntity<GetCurrentUserResponseDTO> getCurrentUser(){
+    @GetMapping("/current")
+    public ResponseEntity<GetCurrentUserResponseDTO> getCurrentUser() {
         GetCurrentUserResponseDTO currentUser = userService.getCurrentUser();
         return ResponseEntity.ok().body(currentUser);
     }
 
-    @GetMapping("/getWallet")
-    public ResponseEntity<GetWalletResponseDTO> getWallet(){
+    @GetMapping("/wallet")
+    public ResponseEntity<GetWalletResponseDTO> getWallet() {
         GetWalletResponseDTO wallet = userService.getWallet();
         return ResponseEntity.ok().body(wallet);
     }
 
     @PatchMapping("/addMoney")
-    public ResponseEntity<?> addMoney(@RequestParam(name="value") Double value){
+    public ResponseEntity<?> addMoney(@RequestParam(name = "value") Double value) {
         userService.addMoney(value);
         return ResponseEntity.ok("success");
     }
 
     @PatchMapping("/buyCryptocurrency")
-    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name="cryptoId") UUID cryptoId,
-                                               @RequestParam(name="value") Double value){
-        userService.buyCryptocurrency(cryptoId,value);
-        return ResponseEntity.ok("success");
+    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
+                                               @RequestParam(name = "value") Double value) {
+        userService.buyCryptocurrency(cryptoId, value);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/sellCryptocurrency")
-    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name="cryptoId") UUID cryptoId,
-                                                @RequestParam(name="value") Double value){
-        userService.sellCryptocurrency(cryptoId,value);
-        return ResponseEntity.ok("success");
+    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
+                                                @RequestParam(name = "value") Double value) {
+        userService.sellCryptocurrency(cryptoId, value);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody @Valid CreateUserRequestDTO userDTO) {
-        return new ResponseEntity<>(userService.create(userDTO), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(),
-                                                                                                          jwtRequest.getPassword());
+                jwtRequest.getPassword());
         Authentication authentication = authenticationProvider.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        if(userService.findByEmail(jwtRequest.getEmail()) == null){
+        if (userService.findByEmail(jwtRequest.getEmail()) == null) {
             throw new SecurityException("Provided email is not registered.");
         }
-        String jwt=tokenProvider.createToken(authentication);
+        String jwt = tokenProvider.createToken(authentication);
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
 }

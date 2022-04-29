@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CryptocurrencyMapper {
-    public static GetCryptoListResponseDTO toGetCryptoListResponseDTOEntity(Cryptocurrency cryptocurrency){
+    public static GetCryptoListResponseDTO toGetCryptoListResponseDTOEntity(Cryptocurrency cryptocurrency) {
         return GetCryptoListResponseDTO.builder()
                 .name(cryptocurrency.getName())
                 .icon(cryptocurrency.getIcon())

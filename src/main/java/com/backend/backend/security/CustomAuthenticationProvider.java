@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -19,17 +20,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        Optional<User> optionalUser = userRepository.findByEmail((String)authentication.getPrincipal());
+        Optional<User> optionalUser = userRepository.findByEmail((String) authentication.getPrincipal());
         return optionalUser.map(user -> {
-           String plainPassword = (String)authentication.getCredentials();
-           if(!BCrypt.checkpw(plainPassword.trim(), user.getPassword())){
-               throw new SecurityException("User can not be authenticated.");
-           }
+                    String plainPassword = (String) authentication.getCredentials();
+                    if (!BCrypt.checkpw(plainPassword.trim(), user.getPassword())) {
+                        throw new SecurityException("User can not be authenticated.");
+                    }
 
-           return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+                    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
                             authentication.getCredentials(),
                             Collections.emptyList());
-        })
+                })
                 .orElseThrow(() -> new SecurityException("User can not be authenticated"));
     }
 

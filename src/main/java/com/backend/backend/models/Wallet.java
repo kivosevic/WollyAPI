@@ -6,26 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Wallet {
-    @Id
-    @Column(name = "uuid", columnDefinition = "char(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
-    @GeneratedValue(strategy = AUTO)
-    private UUID id;
+public class Wallet extends AbstractEntity {
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "wallet")
     private List<WalletItem> walletItems = new ArrayList<>();
     @ToString.Exclude

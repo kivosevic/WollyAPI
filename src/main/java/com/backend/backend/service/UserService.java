@@ -7,6 +7,7 @@ import com.backend.backend.dto.GetWalletResponseDTO;
 import com.backend.backend.mapper.CryptocurrencyMapper;
 import com.backend.backend.mapper.UserMapper;
 import com.backend.backend.mapper.WalletMapper;
+import com.backend.backend.models.Cryptocurrency;
 import com.backend.backend.models.User;
 import com.backend.backend.models.Wallet;
 import com.backend.backend.models.WalletItem;
@@ -34,13 +35,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final WalletItemRepository walletItemRepository;
     private final CryptocurrencyRepository cryptocurrencyRepository;
     private final UserMapper userMapper;
     private final WalletMapper walletMapper;
-    private final CryptocurrencyMapper cryptocurrencyMapper;
 
     private User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +65,7 @@ public class UserService {
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), salt);
         user.setPassword(hashedPassword);
-        user.setCurrentCardBalance(Double.valueOf(50000));
+        user.setCurrentCardBalance(50000.0);
         user.setRole("USER");
 
         Wallet wallet = new Wallet();
@@ -80,15 +81,15 @@ public class UserService {
     }
 
     public GetCurrentUserResponseDTO getCurrentUser() {
-        GetCurrentUserResponseDTO user = userMapper.toGetUserResponseDTOEntity(getLoggedInUser());
-        return user;
+        return userMapper.toGetUserResponseDTOEntity(getLoggedInUser());
     }
 
     public List<GetCryptoListResponseDTO> getCryptoList() {
         User user = getLoggedInUser();
         List<GetCryptoListResponseDTO> cryptoList = new ArrayList<>();
         user.getWallet().getWalletItems().forEach(walletItem -> {
-            cryptoList.add(CryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId())));
+            Cryptocurrency cryptocurrency = cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId());
+            cryptoList.add(CryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrency));
         });
 
         return cryptoList;

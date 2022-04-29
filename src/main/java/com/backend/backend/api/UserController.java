@@ -29,18 +29,18 @@ public class UserController {
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
 
-    @RequestMapping(value = "/getCryptoList", method = RequestMethod.GET, produces = "application/json")
+    @GetMapping("/crypto")
     public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController() {
         return ResponseEntity.ok().body(userService.getCryptoList());
     }
 
-    @GetMapping("/getCurrentUser")
+    @GetMapping("/current")
     public ResponseEntity<GetCurrentUserResponseDTO> getCurrentUser() {
         GetCurrentUserResponseDTO currentUser = userService.getCurrentUser();
         return ResponseEntity.ok().body(currentUser);
     }
 
-    @GetMapping("/getWallet")
+    @GetMapping("/wallet")
     public ResponseEntity<GetWalletResponseDTO> getWallet() {
         GetWalletResponseDTO wallet = userService.getWallet();
         return ResponseEntity.ok().body(wallet);
@@ -56,19 +56,19 @@ public class UserController {
     public ResponseEntity<?> buyCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
                                                @RequestParam(name = "value") Double value) {
         userService.buyCryptocurrency(cryptoId, value);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/sellCryptocurrency")
     public ResponseEntity<?> sellCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
                                                 @RequestParam(name = "value") Double value) {
         userService.sellCryptocurrency(cryptoId, value);
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody @Valid CreateUserRequestDTO userDTO) {
-        return new ResponseEntity<>(userService.create(userDTO), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
     }
 
     @PostMapping("/login")

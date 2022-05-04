@@ -35,11 +35,11 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
-
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final WalletItemRepository walletItemRepository;
     private final CryptocurrencyRepository cryptocurrencyRepository;
+
     private final UserMapper userMapper;
     private final WalletMapper walletMapper;
 

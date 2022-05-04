@@ -10,4 +10,3 @@ UPDATE wallet SET user_uuid = '4961dc55-b2c3-413f-ba47-086dfbc4497a' WHERE uuid 
 
 INSERT INTO wallet_item VALUES ('0b97e19a-78a1-4003-9972-3c359715fabc', '309', '0b97e19a-78a1-4003-9972-3c359715fabc', 'efa93ef3-4ebd-450b-97ac-0b0e68bb8660');
 INSERT INTO wallet_item VALUES ('8d8d214d-b11b-4d7f-b6cd-3c4ece7c38ce', '919', '04767ea7-44e0-4333-879d-e127ee8678f6', 'efa93ef3-4ebd-450b-97ac-0b0e68bb8660');
-;

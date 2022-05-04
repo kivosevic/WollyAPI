@@ -1,4 +1,3 @@
-/*
 package com.backend.backend.swagger;
 
 import org.springframework.context.annotation.Bean;
@@ -31,8 +30,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "HTP-API Documentation",
-                "REST API for Help me tape application",
+                "WollyAPI Documentation",
+                "REST API for Wolly mobile application",
                 "0.1",
                 "Terms of service",
                 new Contact("Vega IT Omega", "https://www.omega.vegait.rs/", "apply4omega@vegait.rs"),
@@ -64,4 +63,4 @@ public class SwaggerConfig implements WebMvcConfigurer {
         authorizationScopes[0] = authorizationScope;
         return List.of(new SecurityReference("JWT", authorizationScopes));
     }
-}*/
+}

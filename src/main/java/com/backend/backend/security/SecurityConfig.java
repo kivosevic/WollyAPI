@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui-custom.html"
+            "/swagger-ui-custom.html",
+            "/swagger-ui/index.html"
             // other public endpoints of your API may be appended to this array
     };
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;

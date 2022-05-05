@@ -24,7 +24,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private ApiKey apiKey(){
+    private ApiKey apiKey() {
         return new ApiKey("JWT", AUTHORIZATION_HEADER, "header");
     }
 
@@ -32,7 +32,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return new ApiInfo(
                 "WollyAPI Documentation",
                 "REST API for Wolly mobile application",
-                "0.1",
+                "1.0",
                 "Terms of service",
                 new Contact("Vega IT Omega", "https://www.omega.vegait.rs/", "apply4omega@vegait.rs"),
                 "https://www.omega.vegait.rs/",
@@ -57,7 +57,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
 
-    private List<SecurityReference> defaultAuth(){
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;

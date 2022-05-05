@@ -9,6 +9,8 @@ import com.backend.backend.security.JwtRequest;
 import com.backend.backend.security.JwtResponse;
 import com.backend.backend.security.TokenProvider;
 import com.backend.backend.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,34 +32,40 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Api(tags = "Users")
 public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
 
+    @ApiOperation(value = "This method is used to get information about user's cryptocurrencies.")
     @GetMapping("/crypto")
     public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController() {
         return ResponseEntity.ok().body(userService.getCryptoList());
     }
 
+    @ApiOperation(value = "This method is used to get information about currently logged in user.")
     @GetMapping("/current")
     public ResponseEntity<GetCurrentUserResponseDTO> getCurrentUser() {
         GetCurrentUserResponseDTO currentUser = userService.getCurrentUser();
         return ResponseEntity.ok().body(currentUser);
     }
 
+    @ApiOperation(value = "This method is used to get information about user's wallet.")
     @GetMapping("/wallet")
     public ResponseEntity<GetWalletResponseDTO> getWallet() {
         GetWalletResponseDTO wallet = userService.getWallet();
         return ResponseEntity.ok().body(wallet);
     }
 
+    @ApiOperation(value = "This method is used to add money to user's credit card.")
     @PatchMapping("/addMoney")
     public ResponseEntity<?> addMoney(@RequestParam(name = "value") Double value) {
         userService.addMoney(value);
         return ResponseEntity.ok("success");
     }
 
+    @ApiOperation(value = "This method is used to buy wanted cryptocurrency.")
     @PatchMapping("/buyCryptocurrency")
     public ResponseEntity<?> buyCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
                                                @RequestParam(name = "value") Double value) {
@@ -65,6 +73,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "This method is used to sell wanted cryptocurrency.")
     @PatchMapping("/sellCryptocurrency")
     public ResponseEntity<?> sellCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
                                                 @RequestParam(name = "value") Double value) {
@@ -72,11 +81,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "This method is used to register a new user.")
     @PostMapping("/register")
     public ResponseEntity<?> create(@RequestBody @Valid CreateUserRequestDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
     }
 
+    @ApiOperation(value = "This method is used to get logged in.")
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(),

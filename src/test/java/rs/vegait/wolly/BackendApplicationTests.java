@@ -1,4 +1,4 @@
-package rs.vegait.wolly.backend;
+package rs.vegait.wolly;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

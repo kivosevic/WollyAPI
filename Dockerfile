@@ -4,4 +4,4 @@ WORKDIR .
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -Dmaven.test.skip
-ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=docker", "target/wolly-1.0.0.jar"]
+ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=default", "target/wolly-1.0.0.jar"]

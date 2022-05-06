@@ -1,25 +1,12 @@
 version: '3.3'
-
 services:
   wolly-api:
     restart: always
     image: omegadevs/wolly-api:latest
     ports:
       - "8080:8080"
-  wolly-db:
-    image: mysql:8
-    platform: linux/x86_64
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_USER=wolly
-      - MYSQL_PASSWORD=wolly
-      - MYSQL_ROOT_PASSWORD=wolly
-      - MYSQL_DATABASE=wollyapi
-    volumes:
-      - my-db:/var/lib/mysql
+
 networks:
   default:
 volumes:
-  my-db:
+  wolly-volume:

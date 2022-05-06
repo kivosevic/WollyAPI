@@ -201,7 +201,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/getCryptoList",
+							"raw": "http://localhost:8080/api/v1/users/crypto",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -211,7 +211,7 @@
 								"api",
 								"v1",
 								"users",
-								"getCryptoList"
+								"crypto"
 							]
 						}
 					},
@@ -250,7 +250,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/getCurrentUser",
+							"raw": "http://localhost:8080/api/v1/users/current",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -260,7 +260,7 @@
 								"api",
 								"v1",
 								"users",
-								"getCurrentUser"
+								"current"
 							]
 						}
 					},

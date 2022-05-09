@@ -1,14 +1,6 @@
 package rs.vegait.wolly.api;
 
-import rs.vegait.wolly.dto.CreateUserRequestDTO;
-import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
-import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
-import rs.vegait.wolly.dto.GetWalletResponseDTO;
-import rs.vegait.wolly.security.CustomAuthenticationProvider;
-import rs.vegait.wolly.security.JwtRequest;
-import rs.vegait.wolly.security.JwtResponse;
-import rs.vegait.wolly.security.TokenProvider;
-import rs.vegait.wolly.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import rs.vegait.wolly.dto.CreateUserRequestDTO;
+import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
+import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
+import rs.vegait.wolly.dto.GetWalletResponseDTO;
+import rs.vegait.wolly.security.CustomAuthenticationProvider;
+import rs.vegait.wolly.security.JwtRequest;
+import rs.vegait.wolly.security.JwtResponse;
+import rs.vegait.wolly.security.TokenProvider;
+import rs.vegait.wolly.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Api(tags = "Users")
 public class UserController {
+    @Autowired
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;

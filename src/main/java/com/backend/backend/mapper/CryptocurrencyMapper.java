@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class CryptocurrencyMapper {
     public static GetCryptoListResponseDTO toGetCryptoListResponseDTOEntity(Cryptocurrency cryptocurrency) {
         return GetCryptoListResponseDTO.builder()
-                .id(cryptocurrency.getId())
                 .name(cryptocurrency.getName())
                 .icon(cryptocurrency.getIcon())
                 .valueOfOne(cryptocurrency.getValueOfOne())

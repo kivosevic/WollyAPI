@@ -10,7 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class GetCryptoListResponseDTO {
-    private UUID id;
     private String name;
     private String icon;
     private Double valueOfOne;

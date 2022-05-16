@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,6 +62,10 @@ public class UserService {
             throw new EntityExistsException("This email is already in use.");
         }
 
+        if(checkForNullParameter(userDTO)){
+            throw new InvalidParameterException("All parameters must have value.");
+        };
+
         User user = userMapper.toUserEntity(userDTO);
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), salt);
@@ -78,6 +83,13 @@ public class UserService {
         walletRepository.save(wallet);
 
         return user;
+    }
+
+    private boolean checkForNullParameter(CreateUserRequestDTO userDTO) {
+        return userDTO.getFirstName() == null ||
+                userDTO.getLastName() == null ||
+                userDTO.getEmail() == null ||
+                userDTO.getPassword() == null;
     }
 
     public GetCurrentUserResponseDTO getCurrentUser() {
@@ -109,6 +121,8 @@ public class UserService {
     public void buyCryptocurrency(UUID cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         wallet.setTotalBalance(wallet.getTotalBalance() + value);
+        User user = wallet.getUser();
+        user.setCurrentCardBalance(user.getCurrentCardBalance() - value);
 
         AtomicReference<Boolean> valid = new AtomicReference<>(false);
         for (WalletItem walletItem : wallet.getWalletItems()) {
@@ -126,6 +140,9 @@ public class UserService {
     public void sellCryptocurrency(UUID cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         wallet.setTotalBalance(wallet.getTotalBalance() - value);
+        User user = wallet.getUser();
+        user.setCurrentCardBalance(user.getCurrentCardBalance() + value);
+
         wallet.getWalletItems().forEach(walletItem -> {
             if (walletItem.getCryptocurrencyId().equals(cryptoId)) {
                 walletItem.setAmount(walletItem.getAmount() - value);

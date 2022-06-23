@@ -36,7 +36,7 @@ public class CryptocurrencyController {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(
                         "https://coingecko.p.rapidapi.com/coins/markets?vs_currency=usd&page=1&per_page=100&order=market_cap_desc"))
-                .header("X-RapidAPI-Key", "2763ca2ac3msh629713ea7877fbap123b0djsn5235050365a5")
+                .header("X-RapidAPI-Key", "")
                 .header("X-RapidAPI-Host", "coingecko.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();

@@ -112,3 +112,15 @@ INSERT INTO cryptocurrency(uuid, name, abbreviation, icon, valueOfOne) VALUES ('
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+2022-06-22 16:51:51 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "ICON VARCHAR(255)": "'iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAYAAACI7Fo9AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAA... (12544)"; SQL statement:
+insert into cryptocurrency (abbreviation, icon, name, value_of_one, uuid) values (?, ?, ?, ?, ?) [22001-200]
+2022-06-22 16:56:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "ICON VARCHAR(15000)": "'iVBORw0KGgoAAAANSUhEUgAAAPoAAADbCAYAAABEHIyuAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAA... (16992)"; SQL statement:
+insert into cryptocurrency (abbreviation, icon, name, value_of_one, uuid) values (?, ?, ?, ?, ?) [22001-200]
+2022-06-22 16:56:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "ICON VARCHAR(25000)": "'iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAYAAACI7Fo9AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAB... (26936)"; SQL statement:
+insert into cryptocurrency (abbreviation, icon, name, value_of_one, uuid) values (?, ?, ?, ?, ?) [22001-200]
+2022-06-22 16:58:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "ICON VARCHAR(30000)": "'iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAYAAACI7Fo9AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAC... (52408)"; SQL statement:
+insert into cryptocurrency (abbreviation, icon, name, value_of_one, uuid) values (?, ?, ?, ?, ?) [22001-200]

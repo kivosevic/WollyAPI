@@ -1,9 +1,11 @@
 package rs.vegait.wolly.api;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import rs.vegait.wolly.dto.CreateUserRequestDTO;
 import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
 import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
@@ -26,10 +31,6 @@ import rs.vegait.wolly.security.JwtRequest;
 import rs.vegait.wolly.security.JwtResponse;
 import rs.vegait.wolly.security.TokenProvider;
 import rs.vegait.wolly.service.UserService;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -70,7 +71,7 @@ public class UserController {
 
     @ApiOperation(value = "This method is used to buy wanted cryptocurrency.")
     @PatchMapping("/buyCryptocurrency")
-    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
+    public ResponseEntity<?> buyCryptocurrency(@RequestParam(name = "cryptoId") String cryptoId,
                                                @RequestParam(name = "value") Double value) {
         userService.buyCryptocurrency(cryptoId, value);
         return ResponseEntity.ok().build();
@@ -78,7 +79,7 @@ public class UserController {
 
     @ApiOperation(value = "This method is used to sell wanted cryptocurrency.")
     @PatchMapping("/sellCryptocurrency")
-    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name = "cryptoId") UUID cryptoId,
+    public ResponseEntity<?> sellCryptocurrency(@RequestParam(name = "cryptoId") String cryptoId,
                                                 @RequestParam(name = "value") Double value) {
         userService.sellCryptocurrency(cryptoId, value);
         return ResponseEntity.ok().build();

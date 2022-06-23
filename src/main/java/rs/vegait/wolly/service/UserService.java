@@ -1,5 +1,22 @@
 package rs.vegait.wolly.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+
+import com.sun.istack.NotNull;
+
+import lombok.RequiredArgsConstructor;
 import rs.vegait.wolly.dto.CreateUserRequestDTO;
 import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
 import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
@@ -15,22 +32,6 @@ import rs.vegait.wolly.repository.CryptocurrencyRepository;
 import rs.vegait.wolly.repository.UserRepository;
 import rs.vegait.wolly.repository.WalletItemRepository;
 import rs.vegait.wolly.repository.WalletRepository;
-import com.sun.istack.NotNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -58,13 +59,6 @@ public class UserService {
     }
 
     public User create(CreateUserRequestDTO userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new EntityExistsException("This email is already in use.");
-        }
-
-        if(checkForNullParameter(userDTO)){
-            throw new InvalidParameterException("All parameters must have value.");
-        };
 
         User user = userMapper.toUserEntity(userDTO);
         String salt = BCrypt.gensalt();
@@ -83,13 +77,6 @@ public class UserService {
         walletRepository.save(wallet);
 
         return user;
-    }
-
-    private boolean checkForNullParameter(CreateUserRequestDTO userDTO) {
-        return userDTO.getFirstName() == null ||
-                userDTO.getLastName() == null ||
-                userDTO.getEmail() == null ||
-                userDTO.getPassword() == null;
     }
 
     public GetCurrentUserResponseDTO getCurrentUser() {
@@ -118,7 +105,7 @@ public class UserService {
         user.setCurrentCardBalance(newBalance);
     }
 
-    public void buyCryptocurrency(UUID cryptoId, Double value) {
+    public void buyCryptocurrency(String cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         wallet.setTotalBalance(wallet.getTotalBalance() + value);
         User user = wallet.getUser();
@@ -137,7 +124,7 @@ public class UserService {
         }
     }
 
-    public void sellCryptocurrency(UUID cryptoId, Double value) {
+    public void sellCryptocurrency(String cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         wallet.setTotalBalance(wallet.getTotalBalance() - value);
         User user = wallet.getUser();
@@ -148,5 +135,9 @@ public class UserService {
                 walletItem.setAmount(walletItem.getAmount() - value);
             }
         });
+    }
+
+    public boolean existUserByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

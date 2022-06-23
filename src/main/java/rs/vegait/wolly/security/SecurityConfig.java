@@ -1,6 +1,7 @@
 package rs.vegait.wolly.security;
 
-import lombok.RequiredArgsConstructor;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,8 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import lombok.RequiredArgsConstructor;
 
 
 @Configuration
@@ -35,8 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/index.html"
             // other public endpoints of your API may be appended to this array
     };
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    
     private final TokenProvider tokenProvider;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,21 +47,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private JwtConfigurer securityConfigurerAdapter() {
-        return new JwtConfigurer(tokenProvider);
+        return new JwtConfigurer(tokenProvider,handlerExceptionResolver);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/**").permitAll()
+                .antMatchers("/api/v1/cryptos/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()

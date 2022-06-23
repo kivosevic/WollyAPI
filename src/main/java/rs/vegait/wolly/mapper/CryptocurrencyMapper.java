@@ -1,9 +1,11 @@
 package rs.vegait.wolly.mapper;
 
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import rs.vegait.wolly.dto.CryptoDto;
 import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
 import rs.vegait.wolly.models.Cryptocurrency;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -14,6 +16,16 @@ public class CryptocurrencyMapper {
                 .name(cryptocurrency.getName())
                 .icon(cryptocurrency.getIcon())
                 .valueOfOne(cryptocurrency.getValueOfOne())
+                .build();
+    }
+
+    public static Cryptocurrency toEntity(CryptoDto cryptoDto) {
+        return Cryptocurrency.builder()
+                .id(cryptoDto.getId())
+                .icon(cryptoDto.getLogo())
+                .name(cryptoDto.getName())
+                .abbreviation(cryptoDto.getSymbol())
+                .valueOfOne(Double.parseDouble(cryptoDto.getPrice()))
                 .build();
     }
 }

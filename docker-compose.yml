@@ -2,13 +2,30 @@ version: '3.3'
 
 services:
   backend-api:
-    restart: always
+    depends_on:
+      - database
+    restart: on-failure
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile 
     ports:
       - "8080:8080"
-networks:
-  default:
+    network_mode: host  
+  database:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=wolly
+
+    ports:
+      - '5432:5432'
+    network_mode: host  
+
+    volumes:
+      - db:/var/lib/postgresql/data
+
 volumes:
-  wolly-volume:
+  db:
+    driver: local

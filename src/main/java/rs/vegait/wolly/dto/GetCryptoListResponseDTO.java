@@ -12,4 +12,5 @@ public class GetCryptoListResponseDTO {
     private String name;
     private String icon;
     private Double valueOfOne;
+    private String abbreviation;
 }

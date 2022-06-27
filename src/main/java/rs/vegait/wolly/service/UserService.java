@@ -1,8 +1,6 @@
 package rs.vegait.wolly.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,18 +15,17 @@ import org.springframework.stereotype.Service;
 import com.sun.istack.NotNull;
 
 import lombok.RequiredArgsConstructor;
+import rs.vegait.wolly.dao.WalletItemDao;
 import rs.vegait.wolly.dto.CreateUserRequestDTO;
-import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
 import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
 import rs.vegait.wolly.dto.GetWalletResponseDTO;
-import rs.vegait.wolly.mapper.CryptocurrencyMapper;
+import rs.vegait.wolly.dto.WalletItemDto;
 import rs.vegait.wolly.mapper.UserMapper;
+import rs.vegait.wolly.mapper.WalletItemMapper;
 import rs.vegait.wolly.mapper.WalletMapper;
-import rs.vegait.wolly.models.Cryptocurrency;
 import rs.vegait.wolly.models.User;
 import rs.vegait.wolly.models.Wallet;
 import rs.vegait.wolly.models.WalletItem;
-import rs.vegait.wolly.repository.CryptocurrencyRepository;
 import rs.vegait.wolly.repository.UserRepository;
 import rs.vegait.wolly.repository.WalletItemRepository;
 import rs.vegait.wolly.repository.WalletRepository;
@@ -40,8 +37,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final WalletItemRepository walletItemRepository;
-    private final CryptocurrencyRepository cryptocurrencyRepository;
 
+    private final WalletItemMapper walletItemMapper;
     private final UserMapper userMapper;
     private final WalletMapper walletMapper;
 
@@ -83,20 +80,12 @@ public class UserService {
         return userMapper.toGetUserResponseDTOEntity(getLoggedInUser());
     }
 
-    public List<GetCryptoListResponseDTO> getCryptoList() {
-        User user = getLoggedInUser();
-        List<GetCryptoListResponseDTO> cryptoList = new ArrayList<>();
-        user.getWallet().getWalletItems().forEach(walletItem -> {
-            Cryptocurrency cryptocurrency = cryptocurrencyRepository.getById(walletItem.getCryptocurrencyId());
-            cryptoList.add(CryptocurrencyMapper.toGetCryptoListResponseDTOEntity(cryptocurrency));
-        });
-
-        return cryptoList;
-    }
-
     public GetWalletResponseDTO getWallet() {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
-        return walletMapper.toGetWalletResponseDTOEntity(wallet);
+        List<WalletItemDao> listofItemDao = walletItemRepository
+                .getSumOfCryptocurrency(getLoggedInUser().getWallet().getId().toString());
+        List<WalletItemDto> listOfItemDto = walletItemMapper.toListDto(listofItemDao);
+        return walletMapper.toGetWalletResponseDTOEntity(wallet, listOfItemDto);
     }
 
     public void addMoney(Double value) {

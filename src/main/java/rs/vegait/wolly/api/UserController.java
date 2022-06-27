@@ -1,8 +1,5 @@
 package rs.vegait.wolly.api;
 
-import java.util.List;
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import rs.vegait.wolly.dto.CreateUserRequestDTO;
-import rs.vegait.wolly.dto.GetCryptoListResponseDTO;
 import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
 import rs.vegait.wolly.dto.GetWalletResponseDTO;
 import rs.vegait.wolly.security.CustomAuthenticationProvider;
@@ -42,11 +38,7 @@ public class UserController {
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationProvider authenticationProvider;
 
-    @ApiOperation(value = "This method is used to get information about user's cryptocurrencies.")
-    @GetMapping("/crypto")
-    public ResponseEntity<List<GetCryptoListResponseDTO>> getCryptoListController() {
-        return ResponseEntity.ok().body(userService.getCryptoList());
-    }
+    
 
     @ApiOperation(value = "This method is used to get information about currently logged in user.")
     @GetMapping("/current")

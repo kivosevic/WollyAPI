@@ -22,6 +22,10 @@ public class WalletItemMapper {
     public WalletItemDto toDto(WalletItemDao walletItemDao) {
         WalletItemDto walletItemDto = WalletItemDto.builder()
                 .cryptocurrencyId(walletItemDao.getCryptocurrency_id())
+                .abbreviation(walletItemDao.getAbbreviation())
+                .icon(walletItemDao.getIcon())
+                .name(walletItemDao.getName())
+                .valueOfOne(walletItemDao.getValue_of_one())
                 .sum(walletItemDao.getSum())
                 .build();
         return walletItemDto;

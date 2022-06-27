@@ -1,6 +1,5 @@
 package rs.vegait.wolly.models;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -15,11 +14,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class WalletItem extends AbstractEntity {
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne 
     private Wallet wallet;
-
-    @Column(name = "cryptocurrencyId", columnDefinition = "char(36)")
-
     private String cryptocurrencyId;
     private Double amount;
 

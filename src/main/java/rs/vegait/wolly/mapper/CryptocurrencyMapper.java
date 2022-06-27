@@ -15,6 +15,7 @@ public class CryptocurrencyMapper {
                 .id(cryptocurrency.getId())
                 .name(cryptocurrency.getName())
                 .icon(cryptocurrency.getIcon())
+                .abbreviation(cryptocurrency.getAbbreviation())
                 .valueOfOne(cryptocurrency.getValueOfOne())
                 .build();
     }

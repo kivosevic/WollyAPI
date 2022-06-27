@@ -14,6 +14,6 @@ import rs.vegait.wolly.models.WalletItem;
 @Repository
 public interface WalletItemRepository extends JpaRepository<WalletItem, UUID> {
 
-    @Query(nativeQuery = true, value = "select w.cryptocurrency_id,sum(amount) from wallet_item w where w.wallet_uuid=:uuid group by w.cryptocurrency_id;")
+    @Query(nativeQuery = true, value = "select sum(amount),w.cryptocurrency_id,c.icon,c.name,c.abbreviation,c.value_of_one from wallet_item w inner join cryptocurrency c on w.cryptocurrency_id= c.id where w.wallet_uuid=:uuid group by w.cryptocurrency_id,c.icon,c.name,c.abbreviation,c.value_of_one;")
     public List<WalletItemDao> getSumOfCryptocurrency(@Param("uuid") String uuid);
 }

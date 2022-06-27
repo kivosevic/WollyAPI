@@ -14,5 +14,9 @@ import lombok.Setter;
 public class WalletItemDto {
     
     private String cryptocurrencyId;
+    private String name;
+    private String abbreviation;
+    private String icon;
+    private Double valueOfOne;
     private Double sum;
 }

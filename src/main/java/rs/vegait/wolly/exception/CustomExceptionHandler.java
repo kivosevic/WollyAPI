@@ -1,7 +1,5 @@
 package rs.vegait.wolly.exception;
 
-
-
 import javax.persistence.EntityExistsException;
 
 import org.springframework.http.HttpHeaders;
@@ -16,25 +14,25 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import io.jsonwebtoken.JwtException;
 
-
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST,"Validation error");
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Validation error");
         apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
         apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
-        return new ResponseEntity<>(apiError,apiError.getStatus());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
     @ExceptionHandler(NoSuchElementFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleNoSuchElementFoundException(NoSuchElementFoundException itemNotFoundException, WebRequest request) {
+    public ResponseEntity<Object> handleNoSuchElementFoundException(NoSuchElementFoundException itemNotFoundException,
+            WebRequest request) {
         return buildErrorResponse(itemNotFoundException, HttpStatus.NOT_FOUND, request);
     }
 
@@ -62,27 +60,31 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
     }
 
-
+    @ExceptionHandler(InsufficientFundsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> insufficientFundsException(InsufficientFundsException ex, WebRequest request) {
+        return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
+    }
 
     @ExceptionHandler(EntityExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> entityExistException(EntityExistsException entityExistsException, WebRequest request) {
+    public ResponseEntity<Object> entityExistException(EntityExistsException entityExistsException,
+            WebRequest request) {
         return buildErrorResponse(entityExistsException, HttpStatus.BAD_REQUEST, request);
     }
 
-   private ResponseEntity<Object> buildErrorResponse(Exception exception,
-                                                      HttpStatus httpStatus,
-                                                      WebRequest request) {
+    private ResponseEntity<Object> buildErrorResponse(Exception exception,
+            HttpStatus httpStatus,
+            WebRequest request) {
         return buildErrorResponse(exception, exception.getMessage(), httpStatus, request);
     }
 
     private ResponseEntity<Object> buildErrorResponse(Exception exception,
-                                                      String message,
-                                                      HttpStatus httpStatus,
-                                                      WebRequest request) {
+            String message,
+            HttpStatus httpStatus,
+            WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.valueOf(httpStatus.value()), message);
         return ResponseEntity.status(httpStatus).body(apiError);
     }
 
-  
 }

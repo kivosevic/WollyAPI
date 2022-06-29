@@ -20,6 +20,7 @@ import rs.vegait.wolly.dto.CreateUserRequestDTO;
 import rs.vegait.wolly.dto.GetCurrentUserResponseDTO;
 import rs.vegait.wolly.dto.GetWalletResponseDTO;
 import rs.vegait.wolly.dto.WalletItemDto;
+import rs.vegait.wolly.exception.InsufficientFundsException;
 import rs.vegait.wolly.mapper.UserMapper;
 import rs.vegait.wolly.mapper.WalletItemMapper;
 import rs.vegait.wolly.mapper.WalletMapper;
@@ -96,6 +97,9 @@ public class UserService {
 
     public void buyCryptocurrency(String cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
+        if (getLoggedInUser().getCurrentCardBalance() - value < 0) {
+            throw new InsufficientFundsException("Insufficient funds to buy cryptocurrency");
+        }
         wallet.setTotalBalance(wallet.getTotalBalance() + value);
         User user = wallet.getUser();
         user.setCurrentCardBalance(user.getCurrentCardBalance() - value);

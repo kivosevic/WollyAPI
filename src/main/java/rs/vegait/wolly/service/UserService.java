@@ -120,20 +120,22 @@ public class UserService {
     public void sellCryptocurrency(String cryptoId, Double value) {
         Wallet wallet = walletRepository.getById(getLoggedInUser().getWallet().getId());
         User user = wallet.getUser();
-        user.setCurrentCardBalance(user.getCurrentCardBalance() + value);
+        wallet.getWalletItems().stream()
+                .filter(walletItem -> walletItem.getCryptocurrencyId().equals(cryptoId))
+                .forEach(walletItem -> setAmount(walletItem, value));
 
-        wallet.getWalletItems().forEach(walletItem -> {
-            if (walletItem.getCryptocurrencyId().equals(cryptoId)) {
-                if (walletItem.getAmount() - value < 0) {
-                    throw new InsufficientFundsException("Insufficient funds to sell cryptocurrency");
-                }
-                walletItem.setAmount(walletItem.getAmount() - value);
-            }
-        });
         wallet.setTotalBalance(wallet.getTotalBalance() - value);
+        user.setCurrentCardBalance(user.getCurrentCardBalance() + value);
     }
 
     public boolean existUserByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    private void setAmount(WalletItem walletItem, Double value) {
+        if (walletItem.getAmount() - value < 0) {
+            throw new InsufficientFundsException("Insufficient funds to sell cryptocurrency");
+        }
+        walletItem.setAmount(walletItem.getAmount() - value);
     }
 }

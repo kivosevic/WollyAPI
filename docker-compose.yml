@@ -10,7 +10,8 @@ services:
       dockerfile: Dockerfile 
     ports:
       - "8080:8080"
-    network_mode: host  
+    
+     
   database:
     image: postgres:14.1-alpine
     restart: unless-stopped
@@ -18,14 +19,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=wolly
-
     ports:
-      - '5432:5432'
-    network_mode: host  
-
+      - '5432:5432' 
     volumes:
-      - db:/var/lib/postgresql/data
+      - my-db:/var/lib/postgresql/data
 
 volumes:
-  db:
-    driver: local
+  my-db:
+   driver: local 
+      

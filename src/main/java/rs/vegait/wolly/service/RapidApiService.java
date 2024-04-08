@@ -44,7 +44,7 @@ public class RapidApiService {
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.add("X-RapidAPI-Key", rapidApiKey);
         requestHeader.add("X-RapidAPI-Host", "coingecko.p.rapidapi.com");
-        String url = "https://coingecko.p.rapidapi.com/coins/markets?vs_currency=usd&page=1&per_page=100&order=market_cap_desc";
+        String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&page=1&per_page=100&order=market_cap_desc";
         HttpEntity<String> requestEntity = new HttpEntity<>(requestHeader);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
